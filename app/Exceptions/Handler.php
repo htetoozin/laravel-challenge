@@ -44,11 +44,31 @@ class Handler extends ExceptionHandler
     public function register(): void
     {
         $this->renderable (function (NotFoundResourceException $e, $request) {
-                if($request->is('/api/*')){
-                    return response()->json(['message' => 'Model not found'], 404);
-                }
+            if($request->is('/api/*')){
+                return response()->json(['message' => 'Model not found'], 404);
+            }
         });
     }
+
+    public function render($request, Throwable $exception)
+    {
+       if( $request->is('api/*')){
+         if ($exception instanceof ModelNotFoundException) {
+            return response()->json([
+                'status' => 404,
+                'error' => 'Model not found'
+            ], 404);
+        }
+
+        if ($exception instanceof NotFoundHttpException) {
+           return response()->json([
+            'status' => 404,
+            'error' => 'Resource not found'
+        ], 404);
+
+       }
+   }
+}
 
 
 }

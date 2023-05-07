@@ -22,7 +22,7 @@ Route::post('login', [LoginController::class, 'login']);
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('posts', [PostController::class, 'index']);
-    Route::post('posts/reaction', [PostController::class, 'toggleReaction']);
+    Route::post('posts/{post}/reaction', [PostController::class, 'toggleReaction']);
 
     Route::post('mpt/invoice-amount', [InternetServiceProviderController::class, 'getMptInvoiceAmount']);
     Route::post('ooredoo/invoice-amount', [InternetServiceProviderController::class, 'getOoredooInvoiceAmount']);
