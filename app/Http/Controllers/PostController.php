@@ -5,28 +5,20 @@ namespace App\Http\Controllers;
 use App\Models\Like;
 use App\Models\Post;
 use Illuminate\Http\Request;
+use App\Http\Resources\PostResource;
 
 class PostController extends Controller
 {
-    public function list()
+    public function index()
     {
-        $posts = Post::get();
-
-        $data = collect();
-        foreach ($posts as $post) {
-            $data->add([
-                'id' => $post->id,
-                'title' => $post->title,
-                'description' => $post->description,
-                'tags' => $post->tags,
-                'like_counts' => $post->likes->count(),
-                'created_at' => $post->created_at,
-            ]);
-        }
+        $posts = Post::with('tags')->withCount('likes')->get();
+        
+        $data = PostResource::collection($posts);
 
         return response()->json([
+            'status' => 200,
             'data' => $data,
-        ]);
+        ], 200);
     }
 
     public function toggleReaction(Request $request)

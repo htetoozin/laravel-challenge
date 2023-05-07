@@ -15,13 +15,26 @@ class Post extends Model
         'author_id',
     ];
 
+    // public function tags()
+    // {
+    //     return $this->belongsToMany(Tag::class, 'post_tag');
+    // }
+
+    // public function likes()
+    // {
+    //     return $this->hasMany(Like::class);
+    // }
+
+    /**
+     * Relationships.
+     */
     public function tags()
     {
-        return $this->belongsToMany(Tag::class, 'post_tag');
+        return $this->belongsToMany(Tag::class,'post_tag');
     }
-
+    
     public function likes()
     {
-        return $this->hasMany(Like::class);
+        return $this->belongsToMany(User::class, 'likes');
     }
 }
