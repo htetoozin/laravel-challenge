@@ -1,16 +1,15 @@
 <?php
 
 namespace App\Services\InternetServiceProvider;
+use App\Services\InternetServiceProvider\OperatorInterface;
 
-class Mpt
+class Mpt implements OperatorInterface
 {
-    protected $operator = 'mpt';
+     public function __construct(
+        public int $monthlyFees = 200
+    ) {}
 
-    protected $month = 0;
-
-    protected $monthlyFees = 200;
-
-    public function setMonth(int $month)
+    public function setMonth(int $month = 1)
     {
         $this->month = $month;
     }

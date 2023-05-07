@@ -2,13 +2,12 @@
 
 namespace App\Services\InternetServiceProvider;
 
-class Ooredoo extends Mpt
+class Ooredoo implements OperatorInterface
 {
-    protected $operator = 'ooredoo';
-
-    protected $month = 0;
-
-    protected $monthlyFees = 150;
+    public function __construct(
+        public int $month = 1,
+        public int $monthlyFees = 150
+    ) {}
 
     public function setMonth(int $month)
     {

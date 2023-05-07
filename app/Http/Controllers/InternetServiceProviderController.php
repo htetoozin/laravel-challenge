@@ -6,12 +6,11 @@ use App\Services\InternetServiceProvider\Mpt;
 use App\Services\InternetServiceProvider\Ooredoo;
 use Illuminate\Http\Request;
 
-class InternetServiceProviderController extends Controller
+class InternetServiceProviderController extends Controller 
 {
-    public function getMptInvoiceAmount(Request $request)
+    public function getMptInvoiceAmount(Request $request, Mpt $mpt)
     {
-        $mpt = new Mpt();
-        $mpt->setMonth($request->get('month') ?: 1);
+        $mpt->setMonth($request?->month ?: 1);
         $amount = $mpt->calculateTotalAmount();
 
         return response()->json([
@@ -19,10 +18,9 @@ class InternetServiceProviderController extends Controller
         ]);
     }
 
-    public function getOoredooInvoiceAmount(Request $request)
+    public function getOoredooInvoiceAmount(Request $request, OOredoo $ooredoo)
     {
-        $ooredoo = new Ooredoo();
-        $ooredoo->setMonth($request->get('month') ?: 1);
+        $ooredoo->setMonth($request?->month ?: 1);
         $amount = $ooredoo->calculateTotalAmount();
 
         return response()->json([
