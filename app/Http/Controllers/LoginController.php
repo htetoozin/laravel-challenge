@@ -6,10 +6,10 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use App\Http\Resources\UserResource;
-use App\Http\Requests\LoginRequest;
+use App\Http\Controllers\BaseController;
 use Illuminate\Support\Facades\Validator;
 
-class LoginController extends Controller
+class LoginController extends BaseController
 {
     public function login(Request $request)
     {
@@ -22,31 +22,26 @@ class LoginController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return response([
-                'status' => 422,
-                'message' => $validator->errors()->first()
-            ], 422);
+            return $this->responseError( $validator->errors()->first(), 422);
         }
 
         $user = User::where('email', $request->email)->first();
 
         if (!$user) {
-            return response()->json([
-                'status' => 404,
-                'message' => 'Model not found.',
-            ], 404);
+            return $this->responseError('Model not found.', 404);
         }
 
         if (!Hash::check($request->password, $user->password)) {
-            return response()->json([
-                'status' => 404,
-                'message' => 'Invalid credentials',
-            ], 404);
+            return $this->responseError('Invalid credentials', 404);
         }
 
-        return response()->json([
+        $data = [
             'user' => new UserResource($user),
             'token' => $user->createToken('User-Token')->plainTextToken,
-        ]);
+        ];
+        
+        return $this->responseSuccess($data);
+
+        return response()->json();
     }
 }

@@ -7,19 +7,16 @@ use App\Models\Post;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Resources\PostResource;
+use App\Http\Controllers\BaseController;
 
-class PostController extends Controller
+class PostController extends BaseController
 {
     public function index()
     {
         $posts = Post::with('tags')->withCount('likes')->get();
 
         $data = PostResource::collection($posts);
-
-        return response()->json([
-            'status' => 200,
-            'data' => $data,
-        ], 200);
+        return $this->responseSuccess($data);
     }
 
     public function toggleReaction(Request $request, Post $post)
@@ -32,23 +29,17 @@ class PostController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return response([
-                'status' => 422,
-                'message' => $validator->errors()->first()
-            ], 422);
+            return $this->responseError($validator->errors()->first());
         }
 
         if ($post->author_id == auth()->id()) {
-            return response()->json([
-                'status' => 500,
-                'message' => 'You cannot like your post',
-            ]);
+            return $this->responseError('You cannot like your post', 500);
         }
 
         $toggleLike = auth()->user()->likes()->toggle($post);
 
         $isLiked = !!count($toggleLike['attached']);
-        
+
         return response()->json([
             'status' => 200,
             'message' => $isLiked ? 

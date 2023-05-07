@@ -3,16 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Services\EmployeeManagement\Staff;
+use App\Http\Controllers\BaseController;
 
-class StaffController extends Controller
+class StaffController extends BaseController
 {
 
     public function payroll(Staff $staff)
     {
         $data = $staff->salary();
-
-        return response()->json([
-            'data' => $data,
-        ]);
+        return $this->responseSuccess($data);
     }
 }
